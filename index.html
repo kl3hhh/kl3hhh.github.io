@@ -16,6 +16,7 @@
 
     <script>
         tailwind.config = {
+            darkMode: 'class', // Enable manual dark mode toggle
             theme: {
                 extend: {
                     fontFamily: {
@@ -56,32 +57,51 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+        
+        /* Dark mode overrides for glass card */
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans transition-colors duration-300">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-sm shadow-sm transition-all duration-300" id="navbar">
+    <nav class="fixed w-full z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-sm dark:shadow-slate-800/50 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <!-- Logo -->
-                    <a href="" target="_blank" class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
-                    <div class="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-bold">H</div>
-                    <span class="font-bold text-xl tracking-tight text-slate-900">H.<span class="text-manu-DEFAULT">CAM</span></span>
-                </a>
+                <!-- Logo (Now Static/Non-Interactable) -->
+                <div class="flex-shrink-0 flex items-center gap-2 select-none">
+                    <div class="w-8 h-8 bg-slate-900 dark:bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold transition-colors">H</div>
+                    <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white transition-colors">H.<span class="text-manu-DEFAULT">CAM</span></span>
+                </div>
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#about" class="text-slate-600 hover:text-indigo-600 transition font-medium">About Us</a>
-                    <a href="#healthcare" class="text-slate-600 hover:text-health-DEFAULT transition font-medium">Rescue Module</a>
-                    <a href="#agriculture" class="text-slate-600 hover:text-agri-DEFAULT transition font-medium">Agri Module</a>
-                    <a href="#manufacturing" class="text-slate-600 hover:text-manu-DEFAULT transition font-medium">Manu Module</a>
-                    <a href="#contact" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-medium hover:bg-slate-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">Get Drone</a>
+                    <a href="#about" class="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400 transition font-medium">About Us</a>
+                    <a href="#healthcare" class="text-slate-600 hover:text-health-DEFAULT dark:text-slate-300 dark:hover:text-health-400 transition font-medium">Rescue Module</a>
+                    <a href="#agriculture" class="text-slate-600 hover:text-agri-DEFAULT dark:text-slate-300 dark:hover:text-agri-400 transition font-medium">Agri Module</a>
+                    <a href="#manufacturing" class="text-slate-600 hover:text-manu-DEFAULT dark:text-slate-300 dark:hover:text-manu-400 transition font-medium">Manu Module</a>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-full text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition focus:outline-none">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+
+                    <a href="#contact" class="px-5 py-2.5 rounded-full bg-slate-900 dark:bg-indigo-600 text-white font-medium hover:bg-slate-700 dark:hover:bg-indigo-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">Get Drone</a>
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-slate-900 focus:outline-none">
+                <div class="md:hidden flex items-center gap-4">
+                    <!-- Mobile Dark Mode Toggle -->
+                    <button id="mobile-theme-toggle" class="p-2 rounded-full text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition focus:outline-none">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+                    
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white focus:outline-none">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
@@ -89,13 +109,13 @@
         </div>
 
         <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 absolute w-full">
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 absolute w-full">
             <div class="px-4 pt-2 pb-6 space-y-2 shadow-lg">
-                <a href="#about" class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">About Us</a>
-                <a href="#healthcare" class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 hover:bg-red-50 hover:text-health-DEFAULT">Rescue Config</a>
-                <a href="#agriculture" class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 hover:bg-green-50 hover:text-agri-DEFAULT">Agri Config</a>
-                <a href="#manufacturing" class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 hover:bg-blue-50 hover:text-manu-DEFAULT">Manu Config</a>
-                <a href="#contact" class="block px-3 py-3 rounded-md text-base font-medium bg-slate-900 text-white text-center mt-4">Order Unit</a>
+                <a href="#about" class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-slate-800 hover:text-indigo-600">About Us</a>
+                <a href="#healthcare" class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-health-DEFAULT">Rescue Config</a>
+                <a href="#agriculture" class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-green-50 dark:hover:bg-green-900/30 hover:text-agri-DEFAULT">Agri Config</a>
+                <a href="#manufacturing" class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-manu-DEFAULT">Manu Config</a>
+                <a href="#contact" class="block px-3 py-3 rounded-md text-base font-medium bg-slate-900 dark:bg-indigo-600 text-white text-center mt-4">Order Unit</a>
             </div>
         </div>
     </nav>
@@ -126,17 +146,17 @@
     </section>
 
     <!-- Overview / Stats -->
-    <div class="bg-white border-b border-slate-200" id="solutions">
+    <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors duration-300" id="solutions">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Health Card -->
                 <div class="glass-card p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 border-t-4 border-t-health-DEFAULT group">
-                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                    <div class="w-12 h-12 bg-red-100 dark:bg-red-900/50 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition">
                         <i class="fas fa-heart-pulse text-2xl text-health-DEFAULT"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-1">Rescue Module</h3>
-                    <div class="text-2xl font-bold text-slate-700 mb-2">RM 6,500</div>
-                    <p class="text-slate-600 mb-4">Snap on the Medical Bay & Winch for emergency evac.</p>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-1">Rescue Module</h3>
+                    <div class="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-2">RM 6,500</div>
+                    <p class="text-slate-600 dark:text-slate-400 mb-4">Snap on the Medical Bay & Winch for emergency evac.</p>
                     <a href="#healthcare" class="text-health-DEFAULT font-semibold flex items-center gap-2 group-hover:gap-3 transition-all">
                         See Config <i class="fas fa-arrow-right text-sm"></i>
                     </a>
@@ -144,12 +164,12 @@
 
                 <!-- Agri Card -->
                 <div class="glass-card p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 border-t-4 border-t-agri-DEFAULT group">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900/50 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition">
                         <i class="fas fa-seedling text-2xl text-agri-DEFAULT"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-1">Agri Module</h3>
-                    <div class="text-2xl font-bold text-slate-700 mb-2">RM 4,500</div>
-                    <p class="text-slate-600 mb-4">Attach the Sprayer & Spectral Cam for crop management.</p>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-1">Agri Module</h3>
+                    <div class="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-2">RM 4,500</div>
+                    <p class="text-slate-600 dark:text-slate-400 mb-4">Attach the Sprayer & Spectral Cam for crop management.</p>
                     <a href="#agriculture" class="text-agri-DEFAULT font-semibold flex items-center gap-2 group-hover:gap-3 transition-all">
                         See Config <i class="fas fa-arrow-right text-sm"></i>
                     </a>
@@ -157,12 +177,12 @@
 
                 <!-- Manu Card -->
                 <div class="glass-card p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 border-t-4 border-t-manu-DEFAULT group">
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition">
                         <i class="fas fa-industry text-2xl text-manu-DEFAULT"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-1">Manu Module</h3>
-                    <div class="text-2xl font-bold text-slate-700 mb-2">RM 5,500</div>
-                    <p class="text-slate-600 mb-4">Equip the Gripper Claw for indoor factory logistics.</p>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-1">Manu Module</h3>
+                    <div class="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-2">RM 5,500</div>
+                    <p class="text-slate-600 dark:text-slate-400 mb-4">Equip the Gripper Claw for indoor factory logistics.</p>
                     <a href="#manufacturing" class="text-manu-DEFAULT font-semibold flex items-center gap-2 group-hover:gap-3 transition-all">
                         See Config <i class="fas fa-arrow-right text-sm"></i>
                     </a>
@@ -172,70 +192,70 @@
     </div>
 
     <!-- NEW: System Specifications & Requirements -->
-    <section class="py-16 bg-white border-b border-slate-200">
+    <section class="py-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-900">System Specifications</h2>
-                <p class="text-slate-600 mt-2">Technical data and operational prerequisites for the H.CAM Universal Frame.</p>
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white">System Specifications</h2>
+                <p class="text-slate-600 dark:text-slate-400 mt-2">Technical data and operational prerequisites for the H.CAM Universal Frame.</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Weight & Dimensions -->
-                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-200 hover:shadow-lg transition-shadow">
-                    <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
-                        <i class="fas fa-scale-balanced text-indigo-600 mr-3"></i> Weight & Build
+                <div class="bg-slate-50 dark:bg-slate-800 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-300">
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-6 flex items-center">
+                        <i class="fas fa-scale-balanced text-indigo-600 dark:text-indigo-400 mr-3"></i> Weight & Build
                     </h3>
-                    <ul class="space-y-4 divide-y divide-slate-200">
+                    <ul class="space-y-4 divide-y divide-slate-200 dark:divide-slate-700">
                         <li class="flex justify-between pt-2">
-                            <span class="text-slate-600">Base Airframe Weight</span>
-                            <span class="font-mono font-bold text-slate-900">4.2 kg</span>
+                            <span class="text-slate-600 dark:text-slate-400">Base Airframe Weight</span>
+                            <span class="font-mono font-bold text-slate-900 dark:text-white">4.2 kg</span>
                         </li>
                         <li class="flex justify-between pt-4">
-                            <span class="text-slate-600">Max Payload Capacity</span>
-                            <span class="font-mono font-bold text-slate-900">15.0 kg</span>
+                            <span class="text-slate-600 dark:text-slate-400">Max Payload Capacity</span>
+                            <span class="font-mono font-bold text-slate-900 dark:text-white">15.0 kg</span>
                         </li>
                         <li class="flex justify-between pt-4">
-                            <span class="text-slate-600">Max Takeoff Weight (MTOW)</span>
-                            <span class="font-mono font-bold text-slate-900">19.2 kg</span>
+                            <span class="text-slate-600 dark:text-slate-400">Max Takeoff Weight (MTOW)</span>
+                            <span class="font-mono font-bold text-slate-900 dark:text-white">19.2 kg</span>
                         </li>
                         <li class="flex justify-between pt-4 pb-2">
-                            <span class="text-slate-600">Frame Material</span>
-                            <span class="font-mono font-bold text-slate-900 text-right">Aerospace Grade<br>Carbon Fiber</span>
+                            <span class="text-slate-600 dark:text-slate-400">Frame Material</span>
+                            <span class="font-mono font-bold text-slate-900 dark:text-white text-right">Aerospace Grade<br>Carbon Fiber</span>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Operational Requirements -->
-                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-200 hover:shadow-lg transition-shadow">
-                    <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
-                        <i class="fas fa-clipboard-check text-indigo-600 mr-3"></i> What You Need
+                <div class="bg-slate-50 dark:bg-slate-800 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-300">
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-6 flex items-center">
+                        <i class="fas fa-clipboard-check text-indigo-600 dark:text-indigo-400 mr-3"></i> What You Need
                     </h3>
                     <ul class="space-y-6">
                         <li class="flex items-start">
-                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mt-1">
-                                <i class="fas fa-id-card text-indigo-600"></i>
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center mt-1">
+                                <i class="fas fa-id-card text-indigo-600 dark:text-indigo-400"></i>
                             </div>
                             <div class="ml-4">
-                                <strong class="block text-slate-900">Operator Certification</strong>
-                                <span class="text-sm text-slate-600">Requires Commercial Drone License (e.g., FAA Part 107 or local equivalent) due to weight class.</span>
+                                <strong class="block text-slate-900 dark:text-white">Operator Certification</strong>
+                                <span class="text-sm text-slate-600 dark:text-slate-400">Requires Commercial Drone License (e.g., FAA Part 107 or local equivalent) due to weight class.</span>
                             </div>
                         </li>
                         <li class="flex items-start">
-                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mt-1">
-                                <i class="fas fa-wifi text-indigo-600"></i>
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center mt-1">
+                                <i class="fas fa-wifi text-indigo-600 dark:text-indigo-400"></i>
                             </div>
                             <div class="ml-4">
-                                <strong class="block text-slate-900">Connectivity</strong>
-                                <span class="text-sm text-slate-600">Active 4G/5G connection for cloud AI features, or Local RF Base Station (included) for manual control.</span>
+                                <strong class="block text-slate-900 dark:text-white">Connectivity</strong>
+                                <span class="text-sm text-slate-600 dark:text-slate-400">Active 4G/5G connection for cloud AI features, or Local RF Base Station (included) for manual control.</span>
                             </div>
                         </li>
                         <li class="flex items-start">
-                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mt-1">
-                                <i class="fas fa-bolt text-indigo-600"></i>
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center mt-1">
+                                <i class="fas fa-bolt text-indigo-600 dark:text-indigo-400"></i>
                             </div>
                             <div class="ml-4">
-                                <strong class="block text-slate-900">Power Infrastructure</strong>
-                                <span class="text-sm text-slate-600">Standard 110V/220V outlet required for the H.CAM Supercharger Hub.</span>
+                                <strong class="block text-slate-900 dark:text-white">Power Infrastructure</strong>
+                                <span class="text-sm text-slate-600 dark:text-slate-400">Standard 110V/220V outlet required for the H.CAM Supercharger Hub.</span>
                             </div>
                         </li>
                     </ul>
@@ -245,46 +265,46 @@
     </section>
 
     <!-- Healthcare Section -->
-    <section id="healthcare" class="py-24 bg-slate-50 relative overflow-hidden">
+    <section id="healthcare" class="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
                 <div class="mb-12 lg:mb-0">
-                    <div class="inline-block px-3 py-1 bg-red-100 text-health-dark rounded-full text-sm font-bold mb-4">
+                    <div class="inline-block px-3 py-1 bg-red-100 dark:bg-red-900/50 text-health-dark dark:text-red-300 rounded-full text-sm font-bold mb-4">
                         <i class="fas fa-kit-medical mr-2"></i> H.CAM CONFIG: RED
                     </div>
-                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Module 1: <br>Rescue & Critical Care</h2>
-                    <p class="text-lg text-slate-600 mb-6">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6">Module 1: <br>Rescue & Critical Care</h2>
+                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-6">
                         The H.CAM transforms into a lifesaver. By attaching the <strong>Red Module</strong>, the drone activates high-torque lift mode to carry supplies, locate victims with thermal sensors, and even hoist injured personnel.
                     </p>
                     <ul class="space-y-4 mb-8">
                         <li class="flex items-start">
                             <i class="fas fa-check-circle text-health-DEFAULT mt-1 mr-3"></i>
-                            <span class="text-slate-700"><strong>Heavy-Lift Winch:</strong> Snaps onto the undercarriage to lift up to 120kg.</span>
+                            <span class="text-slate-700 dark:text-slate-300"><strong>Heavy-Lift Winch:</strong> Snaps onto the undercarriage to lift up to 120kg.</span>
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-check-circle text-health-DEFAULT mt-1 mr-3"></i>
-                            <span class="text-slate-700"><strong>Thermal Pod:</strong> Swappable nose-cone camera for heat signature detection.</span>
+                            <span class="text-slate-700 dark:text-slate-300"><strong>Thermal Pod:</strong> Swappable nose-cone camera for heat signature detection.</span>
                         </li>
                     </ul>
 
                     <!-- New Example Added -->
-                    <div class="mb-6 bg-red-50 p-4 rounded-lg border border-red-100">
-                        <h4 class="font-bold text-health-dark text-xs uppercase mb-1"><i class="fas fa-bolt mr-1"></i> Live Deployment: Project Alpine</h4>
-                        <p class="text-sm text-slate-700 mb-2">One H.CAM drone located hikers using Thermal, then dropped a survival kit using the winch.</p>
-                        <div class="flex items-center gap-3 text-xs font-mono text-red-800 bg-red-100/50 p-2 rounded border border-red-200">
+                    <div class="mb-6 bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-100 dark:border-red-900/50">
+                        <h4 class="font-bold text-health-dark dark:text-red-300 text-xs uppercase mb-1"><i class="fas fa-bolt mr-1"></i> Live Deployment: Project Alpine</h4>
+                        <p class="text-sm text-slate-700 dark:text-slate-300 mb-2">One H.CAM drone located hikers using Thermal, then dropped a survival kit using the winch.</p>
+                        <div class="flex items-center gap-3 text-xs font-mono text-red-800 dark:text-red-300 bg-red-100/50 dark:bg-red-900/50 p-2 rounded border border-red-200 dark:border-red-800">
                             <span><i class="fas fa-stopwatch mr-1"></i> Flight: 45m (Heavy Load)</span>
-                            <span class="text-red-300">|</span>
+                            <span class="text-red-300 dark:text-red-500">|</span>
                             <span><i class="fas fa-charging-station mr-1"></i> Charge: 12m (Hot Swap)</span>
                         </div>
                     </div>
 
-                    <button onclick="openSpecs('rescue')" class="bg-white border-2 border-health-DEFAULT text-health-DEFAULT px-6 py-3 rounded-lg font-semibold hover:bg-health-DEFAULT hover:text-white transition">
+                    <button onclick="openSpecs('rescue')" class="bg-white dark:bg-slate-800 border-2 border-health-DEFAULT text-health-DEFAULT px-6 py-3 rounded-lg font-semibold hover:bg-health-DEFAULT hover:text-white transition">
                         View Rescue Specs
                     </button>
                 </div>
                 <div class="relative">
                     <!-- Decorative BG -->
-                    <div class="absolute -inset-4 bg-red-200/50 rounded-xl transform rotate-3"></div>
+                    <div class="absolute -inset-4 bg-red-200/50 dark:bg-red-900/30 rounded-xl transform rotate-3"></div>
                     <!-- Actual Image -->
                     <div class="relative rounded-xl overflow-hidden shadow-2xl h-80 md:h-96 group">
                         <img src="https://images.unsplash.com/photo-1524143986875-f5505dc36b51?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
@@ -307,12 +327,12 @@
     </section>
 
     <!-- Agriculture Section -->
-    <section id="agriculture" class="py-24 bg-white relative">
+    <section id="agriculture" class="py-24 bg-white dark:bg-slate-900 relative transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
                 <div class="order-2 lg:order-1 relative">
                      <!-- Decorative BG -->
-                     <div class="absolute -inset-4 bg-green-200/50 rounded-xl transform -rotate-3"></div>
+                     <div class="absolute -inset-4 bg-green-200/50 dark:bg-green-900/30 rounded-xl transform -rotate-3"></div>
                      <!-- Actual Image -->
                      <div class="relative rounded-xl overflow-hidden shadow-2xl h-80 md:h-96 group">
                         <img src="https://plus.unsplash.com/premium_photo-1664302152998-3850cb88e5df?q=80&w=1000&auto=format&fit=crop" 
@@ -336,36 +356,36 @@
                     </div>
                 </div>
                 <div class="order-1 lg:order-2 mb-12 lg:mb-0">
-                    <div class="inline-block px-3 py-1 bg-green-100 text-agri-dark rounded-full text-sm font-bold mb-4">
+                    <div class="inline-block px-3 py-1 bg-green-100 dark:bg-green-900/50 text-agri-dark dark:text-green-300 rounded-full text-sm font-bold mb-4">
                         <i class="fas fa-leaf mr-2"></i> H.CAM CONFIG: GREEN
                     </div>
-                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Module 2: <br>Precision Agriculture</h2>
-                    <p class="text-lg text-slate-600 mb-6">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6">Module 2: <br>Precision Agriculture</h2>
+                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-6">
                         Swap the rescue winch for the <strong>Green Array</strong>. The H.CAM instantly becomes an agri-bot, equipped with multispectral cameras for crop analysis and precision spray nozzles for targeted treatment.
                     </p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                        <div class="p-4 bg-green-50 rounded-lg border border-green-100">
-                            <h4 class="font-bold text-slate-800 mb-1"><i class="fas fa-eye text-agri-DEFAULT mr-2"></i>Spectral Payload</h4>
-                            <p class="text-sm text-slate-600">Snap-on camera detects plant health from the air.</p>
+                        <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-900/50">
+                            <h4 class="font-bold text-slate-800 dark:text-white mb-1"><i class="fas fa-eye text-agri-DEFAULT mr-2"></i>Spectral Payload</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">Snap-on camera detects plant health from the air.</p>
                         </div>
-                        <div class="p-4 bg-green-50 rounded-lg border border-green-100">
-                            <h4 class="font-bold text-slate-800 mb-1"><i class="fas fa-tint text-agri-DEFAULT mr-2"></i>Spray Tank</h4>
-                            <p class="text-sm text-slate-600">Under-mount tank for automated watering.</p>
+                        <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-900/50">
+                            <h4 class="font-bold text-slate-800 dark:text-white mb-1"><i class="fas fa-tint text-agri-DEFAULT mr-2"></i>Spray Tank</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">Under-mount tank for automated watering.</p>
                         </div>
                     </div>
 
                     <!-- New Example Added -->
-                    <div class="mb-6 bg-green-50 p-4 rounded-lg border border-green-100">
-                         <h4 class="font-bold text-agri-dark text-xs uppercase mb-1"><i class="fas fa-chart-line mr-1"></i> Live Deployment: Napa Valley</h4>
-                        <p class="text-sm text-slate-700 mb-2">The H.CAM mapped 500 acres, then swapped to "Spray Mode" to treat specific vines.</p>
-                        <div class="flex items-center gap-3 text-xs font-mono text-green-800 bg-green-100/50 p-2 rounded border border-green-200">
+                    <div class="mb-6 bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-100 dark:border-green-900/50">
+                         <h4 class="font-bold text-agri-dark dark:text-green-300 text-xs uppercase mb-1"><i class="fas fa-chart-line mr-1"></i> Live Deployment: Napa Valley</h4>
+                        <p class="text-sm text-slate-700 dark:text-slate-300 mb-2">The H.CAM mapped 500 acres, then swapped to "Spray Mode" to treat specific vines.</p>
+                        <div class="flex items-center gap-3 text-xs font-mono text-green-800 dark:text-green-300 bg-green-100/50 dark:bg-green-900/50 p-2 rounded border border-green-200 dark:border-green-800">
                             <span><i class="fas fa-sun mr-1"></i> Flight: 60m (Solar Wing Ext)</span>
-                            <span class="text-green-300">|</span>
+                            <span class="text-green-300 dark:text-green-500">|</span>
                             <span><i class="fas fa-plug mr-1"></i> Charge: 3 Hours</span>
                         </div>
                     </div>
 
-                    <button onclick="openSpecs('agri')" class="bg-white border-2 border-agri-DEFAULT text-agri-DEFAULT px-6 py-3 rounded-lg font-semibold hover:bg-agri-DEFAULT hover:text-white transition">
+                    <button onclick="openSpecs('agri')" class="bg-white dark:bg-slate-800 border-2 border-agri-DEFAULT text-agri-DEFAULT px-6 py-3 rounded-lg font-semibold hover:bg-agri-DEFAULT hover:text-white transition">
                         View Agri Specs
                     </button>
                 </div>
@@ -374,46 +394,46 @@
     </section>
 
     <!-- Manufacturing Section -->
-    <section id="manufacturing" class="py-24 bg-slate-50 relative">
+    <section id="manufacturing" class="py-24 bg-slate-50 dark:bg-slate-950 relative transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
                 <div class="mb-12 lg:mb-0">
-                    <div class="inline-block px-3 py-1 bg-blue-100 text-manu-dark rounded-full text-sm font-bold mb-4">
+                    <div class="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-manu-dark dark:text-blue-300 rounded-full text-sm font-bold mb-4">
                         <i class="fas fa-cogs mr-2"></i> H.CAM CONFIG: BLUE
                     </div>
-                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Module 3: <br>Smart Factory Logistics</h2>
-                    <p class="text-lg text-slate-600 mb-6">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6">Module 3: <br>Smart Factory Logistics</h2>
+                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-6">
                         Bring the H.CAM indoors. With the <strong>Blue Module</strong>, the drone attaches a robotic gripper claw and engages indoor LiDAR navigation. It flies parts through rafters, bypassing floor traffic.
                     </p>
                     <ul class="space-y-4 mb-8">
                         <li class="flex items-start">
                             <div class="flex-shrink-0 h-6 w-6 rounded-full bg-manu-DEFAULT flex items-center justify-center text-white text-xs mt-1">1</div>
-                            <span class="ml-4 text-slate-700"><strong>Robotic Claw:</strong> Attaches to the base for picking up factory parts (up to 15kg).</span>
+                            <span class="ml-4 text-slate-700 dark:text-slate-300"><strong>Robotic Claw:</strong> Attaches to the base for picking up factory parts (up to 15kg).</span>
                         </li>
                         <li class="flex items-start">
                             <div class="flex-shrink-0 h-6 w-6 rounded-full bg-manu-DEFAULT flex items-center justify-center text-white text-xs mt-1">2</div>
-                            <span class="ml-4 text-slate-700"><strong>Indoor LiDAR:</strong> Enables cm-accurate flight inside buildings without GPS.</span>
+                            <span class="ml-4 text-slate-700 dark:text-slate-300"><strong>Indoor LiDAR:</strong> Enables cm-accurate flight inside buildings without GPS.</span>
                         </li>
                     </ul>
 
                     <!-- New Example Added -->
-                    <div class="mb-6 bg-blue-50 p-4 rounded-lg border border-blue-100">
-                         <h4 class="font-bold text-manu-dark text-xs uppercase mb-1"><i class="fas fa-microchip mr-1"></i> Live Deployment: EV Plant</h4>
-                        <p class="text-sm text-slate-700 mb-2">H.CAM drones moved battery cells between assembly lines 40% faster than floor robots.</p>
-                        <div class="flex items-center gap-3 text-xs font-mono text-blue-800 bg-blue-100/50 p-2 rounded border border-blue-200">
+                    <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-900/50">
+                         <h4 class="font-bold text-manu-dark dark:text-blue-300 text-xs uppercase mb-1"><i class="fas fa-microchip mr-1"></i> Live Deployment: EV Plant</h4>
+                        <p class="text-sm text-slate-700 dark:text-slate-300 mb-2">H.CAM drones moved battery cells between assembly lines 40% faster than floor robots.</p>
+                        <div class="flex items-center gap-3 text-xs font-mono text-blue-800 dark:text-blue-300 bg-blue-100/50 dark:bg-blue-900/50 p-2 rounded border border-blue-200 dark:border-blue-800">
                             <span><i class="fas fa-infinity mr-1"></i> Flight: 24/7 (Docking)</span>
-                            <span class="text-blue-300">|</span>
+                            <span class="text-blue-300 dark:text-blue-500">|</span>
                             <span><i class="fas fa-wifi mr-1"></i> Charge: Wireless Rafter Dock</span>
                         </div>
                     </div>
 
-                    <button onclick="openSpecs('manu')" class="bg-white border-2 border-manu-DEFAULT text-manu-DEFAULT px-6 py-3 rounded-lg font-semibold hover:bg-manu-DEFAULT hover:text-white transition">
+                    <button onclick="openSpecs('manu')" class="bg-white dark:bg-slate-800 border-2 border-manu-DEFAULT text-manu-DEFAULT px-6 py-3 rounded-lg font-semibold hover:bg-manu-DEFAULT hover:text-white transition">
                         View Manu Specs
                     </button>
                 </div>
                 <div class="relative">
                      <!-- Decorative BG -->
-                     <div class="absolute -inset-4 bg-blue-200/50 rounded-xl transform rotate-3"></div>
+                     <div class="absolute -inset-4 bg-blue-200/50 dark:bg-blue-900/30 rounded-xl transform rotate-3"></div>
                      <!-- Actual Image -->
                      <div class="relative rounded-xl overflow-hidden shadow-2xl h-80 md:h-96 group">
                         <img src="https://images.unsplash.com/photo-1565514020176-db922f305c45?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
@@ -438,26 +458,26 @@
     </section>
 
     <!-- NEW: About Us Section -->
-    <section id="about" class="py-24 bg-white relative">
+    <section id="about" class="py-24 bg-white dark:bg-slate-900 relative transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">About H.CAM</h2>
-            <p class="text-lg text-slate-600 leading-relaxed">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6">About H.CAM</h2>
+            <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
                 H.CAM is a kind of product that helps people.
             </p>
-            <p class="text-lg text-slate-600 leading-relaxed mt-4">
+            <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mt-4">
                 We currently have three members to build amazing product
             </p>
-            <p class="text-lg text-slate-600 leading-relaxed mt-2">
+            <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mt-2">
                 The three member are:
             </p>
-            <p class="text-lg text-slate-900 font-semibold leading-relaxed mt-2">
+            <p class="text-lg text-slate-900 dark:text-white font-semibold leading-relaxed mt-2">
                 'Benson Ong Jia Hao', 'Jedi Ung Zi Yo', and 'Lam Yoong Seng'
             </p>
         </div>
     </section>
 
     <!-- NEW: AI Q&A Section -->
-    <section id="ai-hub" class="py-20 bg-slate-800 border-t border-slate-700 relative overflow-hidden">
+    <section id="ai-hub" class="py-20 bg-slate-800 dark:bg-slate-950 border-t border-slate-700 dark:border-slate-900 relative overflow-hidden transition-colors duration-300">
         <!-- Background Elements -->
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 opacity-20">
             <div class="absolute top-10 left-10 w-64 h-64 bg-blue-500 rounded-full blur-3xl mix-blend-screen animate-pulse"></div>
@@ -502,14 +522,14 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-24 bg-slate-900 text-white">
+    <section id="contact" class="py-24 bg-slate-900 dark:bg-black text-white transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Order Your H.CAM</h2>
                 <p class="text-slate-400 max-w-2xl mx-auto">Tell us what modules you need. Our <span class="text-blue-400 font-bold">AI Architect</span> can check if the H.CAM works for your specific mission.</p>
             </div>
 
-            <div class="max-w-3xl mx-auto bg-slate-800 rounded-2xl p-8 md:p-12 shadow-2xl border border-slate-700">
+            <div class="max-w-3xl mx-auto bg-slate-800 dark:bg-slate-900 rounded-2xl p-8 md:p-12 shadow-2xl border border-slate-700">
                 <form id="contactForm" onsubmit="event.preventDefault(); handleFormSubmit();">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
@@ -562,11 +582,11 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-900">
+    <footer class="bg-slate-950 dark:bg-black text-slate-400 py-12 border-t border-slate-900 dark:border-slate-800 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div class="col-span-1 md:col-span-1">
-                    <a href="https://kyflak.github.io/kl3hh.io" target="_blank" class="text-white font-bold text-xl tracking-tight hover:text-blue-400 transition duration-200 inline-block">H.<span class="text-blue-500">CAM</span></a>
+                    <div class="text-white font-bold text-xl tracking-tight hover:text-blue-400 transition duration-200 inline-block">H.<span class="text-blue-500">CAM</span></div>
                     <p class="mt-4 text-sm">Innovating the physical world through a single, modular autonomous platform.</p>
                 </div>
                 <div>
@@ -646,6 +666,30 @@
                 menu.classList.add('hidden');
             });
         });
+
+        // Dark Mode Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const mobileThemeToggleBtn = document.getElementById('mobile-theme-toggle');
+        const htmlElement = document.documentElement;
+
+        function toggleTheme() {
+            htmlElement.classList.toggle('dark');
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+        }
+
+        // Initialize theme
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        mobileThemeToggleBtn.addEventListener('click', toggleTheme);
 
         // Navbar Scroll Effect
         const navbar = document.getElementById('navbar');
@@ -884,6 +928,3 @@ Sent via H.CAM Portal`
     </script>
 </body>
 </html>
-
-
-
