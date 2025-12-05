@@ -19,7 +19,7 @@
 
     <script>
         tailwind.config = {
-            darkMode: 'class', // Enable manual dark mode toggle
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -66,6 +66,24 @@
             background: rgba(30, 41, 59, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        /* Dropdown animation */
+        #user-dropdown-menu {
+            transform-origin: top right;
+            transition: all 0.1s ease-out;
+        }
+        #user-dropdown-menu.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+            display: block; /* maintain display for transition, hide via opacity */
+            visibility: hidden;
+        }
+        #user-dropdown-menu:not(.hidden) {
+            opacity: 1;
+            transform: scale(1);
+            visibility: visible;
+        }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans transition-colors duration-300">
@@ -74,7 +92,7 @@
     <nav class="fixed w-full z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-sm dark:shadow-slate-800/50 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <!-- Logo (Now Static/Non-Interactable) -->
+                <!-- Logo (Static Text) -->
                 <div class="flex-shrink-0 flex items-center gap-2 select-none">
                     <div class="w-8 h-8 bg-slate-900 dark:bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold transition-colors">H</div>
                     <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white transition-colors">H.<span class="text-manu-DEFAULT">CAM</span></span>
@@ -87,8 +105,8 @@
                     <a href="#agriculture" class="text-slate-600 hover:text-agri-DEFAULT dark:text-slate-300 dark:hover:text-agri-400 transition font-medium">Agri Module</a>
                     <a href="#manufacturing" class="text-slate-600 hover:text-manu-DEFAULT dark:text-slate-300 dark:hover:text-manu-400 transition font-medium">Manu Module</a>
                    
-                    <!-- Dark Mode Toggle -->
-                    <button id="theme-toggle" class="p-2 rounded-full text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition focus:outline-none">
+                    <!-- Dark Mode Toggle (Desktop) -->
+                    <button id="theme-toggle" class="p-2 rounded-full text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition focus:outline-none" aria-label="Toggle Dark Mode">
                         <i class="fas fa-moon dark:hidden"></i>
                         <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
                     </button>
@@ -98,15 +116,28 @@
                         <button id="login-btn-desktop" class="flex items-center gap-2 text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white font-medium transition mr-4">
                             <i class="fab fa-google"></i> Sign In
                         </button>
-                        <!-- User Avatar (Hidden by default) -->
-                        <div id="user-profile-desktop" class="hidden relative group cursor-pointer">
-                            <div class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold border-2 border-slate-200 dark:border-slate-700">
+                       
+                        <!-- User Avatar (Click to Toggle) -->
+                        <div id="user-profile-desktop" class="hidden relative cursor-pointer z-50">
+                            <!-- Avatar Button -->
+                            <div id="user-avatar-btn" class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold border-2 border-slate-200 dark:border-slate-700 hover:border-indigo-400 hover:shadow-md transition-all">
                                 <i class="fas fa-user"></i>
                             </div>
-                            <!-- Dropdown -->
-                            <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg py-1 hidden group-hover:block border border-slate-100 dark:border-slate-700">
-                                <div class="px-4 py-2 text-xs text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-700">Signed in as Client</div>
-                                <a href="#" id="logout-btn-desktop" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">Sign Out</a>
+                           
+                            <!-- Dropdown Menu (Click based) -->
+                            <div id="user-dropdown-menu" class="hidden absolute right-0 mt-3 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-2xl py-2 border border-slate-100 dark:border-slate-700 ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 rounded-t-xl">
+                                    <span class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Signed in as</span>
+                                    <span id="profile-name-text" class="block text-sm font-bold text-slate-900 dark:text-white truncate">Benson Ong</span>
+                                </div>
+                                <div class="py-1">
+                                    <a href="#" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 transition-colors">
+                                        <i class="fas fa-cog mr-2 text-slate-400"></i> Settings
+                                    </a>
+                                    <a href="#" id="logout-btn-desktop" class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                        <i class="fas fa-sign-out-alt mr-2"></i> Sign Out
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -117,7 +148,7 @@
                 <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center gap-4">
                     <!-- Mobile Dark Mode Toggle -->
-                    <button id="mobile-theme-toggle" class="p-2 rounded-full text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition focus:outline-none">
+                    <button id="mobile-theme-toggle" class="p-2 rounded-full text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition focus:outline-none" aria-label="Toggle Dark Mode">
                         <i class="fas fa-moon dark:hidden"></i>
                         <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
                     </button>
@@ -681,13 +712,18 @@
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
 
+        // --- SECURITY CONFIGURATION ---
+        const GROQ_API_KEY = "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"; // Directly using the key you provided
+
         // UI Elements
         const loginBtnDesktop = document.getElementById('login-btn-desktop');
         const userProfileDesktop = document.getElementById('user-profile-desktop');
+        const userDropdownMenu = document.getElementById('user-dropdown-menu'); // Added
+        const userAvatarBtn = document.getElementById('user-avatar-btn'); // Added
         const logoutBtnDesktop = document.getElementById('logout-btn-desktop');
         const loginBtnMobile = document.getElementById('login-btn-mobile');
         const logoutBtnMobile = document.getElementById('logout-btn-mobile');
-        const profileNameDisplay = document.querySelector('#user-profile-desktop .text-xs');
+        const profileNameText = document.getElementById('profile-name-text'); // Changed from display query selector
 
         // Firebase Configuration & Initialization with Error Handling
         let auth = null;
@@ -718,11 +754,13 @@
                 logoutBtnMobile.classList.remove('hidden');
                
                 // Update profile text
-                if(profileNameDisplay) profileNameDisplay.textContent = "Signed in as Benson Ong";
+                if(profileNameText) profileNameText.textContent = "Benson Ong"; // Or fetch from user obj if available
             } else {
                 // User is signed out
                 loginBtnDesktop.classList.remove('hidden');
                 userProfileDesktop.classList.add('hidden');
+                // Ensure dropdown is hidden on logout
+                if(userDropdownMenu) userDropdownMenu.classList.add('hidden');
                
                 loginBtnMobile.classList.remove('hidden');
                 logoutBtnMobile.classList.add('hidden');
@@ -767,13 +805,35 @@
 
         // --- EVENT LISTENERS ---
 
+        // 1. Dropdown Toggle Logic (Click instead of Hover)
+        if (userAvatarBtn && userDropdownMenu) {
+            userAvatarBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Stop click from reaching document
+                userDropdownMenu.classList.toggle('hidden');
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userProfileDesktop.contains(e.target)) {
+                    userDropdownMenu.classList.add('hidden');
+                }
+            });
+
+            // Stop clicks inside menu from closing it immediately
+            userDropdownMenu.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
+
         loginBtnDesktop.addEventListener('click', handleLogin);
         loginBtnMobile.addEventListener('click', handleLogin);
        
-        logoutBtnDesktop.addEventListener('click', (e) => {
-            e.preventDefault();
-            handleLogout();
-        });
+        if(logoutBtnDesktop) {
+            logoutBtnDesktop.addEventListener('click', (e) => {
+                e.preventDefault();
+                handleLogout();
+            });
+        }
        
         logoutBtnMobile.addEventListener('click', handleLogout);
 
@@ -820,7 +880,13 @@
             // Auto-scroll to the response
             container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-            const apiKey = "AIzaSyBMogKdYD6Jk_ZUOB2ZQZOZcqiyo-Xy35c";
+            const apiKey = GROQ_API_KEY;
+           
+            if (!apiKey) {
+                output.innerHTML = `<div class="p-4 bg-red-900/20 border border-red-500/50 rounded-lg text-red-200 text-sm"><i class="fas fa-key mr-2"></i><strong>Configuration Error:</strong> No API Key found. Please add your key to the 'GROQ_API_KEY' variable in the script.</div>`;
+                return;
+            }
+
             const prompt = `You are a Senior Technical Consultant for H.CAM Autonomous Systems.
             A potential client has submitted a project request: "${details}".
             Target Sector: "${sector}".
@@ -845,17 +911,19 @@
             Keep the language professional, concise, and objective.`;
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                // Switched from Google Gemini to Groq API
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                     method: 'POST',
                     headers: {
+                        'Authorization': `Bearer ${apiKey}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: prompt
-                            }]
-                        }]
+                        model: "llama-3.3-70b-versatile", // Using Llama 3.3 for best performance
+                        messages: [
+                            { role: "system", content: "You are a helpful AI assistant." },
+                            { role: "user", content: prompt }
+                        ]
                     })
                 });
 
@@ -865,7 +933,9 @@
                     throw new Error(data.error.message);
                 }
 
-                const rawText = data.candidates[0].content.parts[0].text;
+                // Groq/OpenAI response format
+                const rawText = data.choices[0].message.content;
+               
                 // Simple markdown parsing for bold and newlines
                 const formattedText = rawText
                     .replace(/\*\*(.*?)\*\*/g, '<strong class="text-blue-200">$1</strong>')
@@ -893,7 +963,13 @@
             container.classList.remove('hidden');
             output.innerHTML = '<span class="animate-pulse">Consulting H.CAM technical database...</span>';
 
-            const apiKey = "AIzaSyBMogKdYD6Jk_ZUOB2ZQZOZcqiyo-Xy35c";
+            const apiKey = GROQ_API_KEY;
+           
+            if (!apiKey) {
+                output.innerHTML = `<span class="text-red-400">Configuration Error: API Key missing.</span>`;
+                return;
+            }
+
             const prompt = `You are a friendly and simple AI assistant for H.CAM.
             The user is asking a question about: "${topic}".
             User Question: "${question}"
@@ -912,18 +988,27 @@
             4. Do not use complicated words or jargon. Explain it like you are talking to a student.`;
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                // Switched from Google Gemini to Groq API
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }]
+                        model: "llama-3.3-70b-versatile", // Using Llama 3.3 for best performance
+                        messages: [
+                            { role: "system", content: "You are a helpful AI assistant." },
+                            { role: "user", content: prompt }
+                        ]
                     })
                 });
 
                 const data = await response.json();
                 if (data.error) throw new Error(data.error.message);
                
-                output.innerText = data.candidates[0].content.parts[0].text;
+                // Groq/OpenAI response format
+                output.innerText = data.choices[0].message.content;
 
             } catch (error) {
                 output.innerHTML = `<span class="text-red-400">Connection error: ${error.message}</span>`;
@@ -1016,6 +1101,41 @@ Sent via H.CAM Portal`
             // Restore background scrolling
             document.body.style.overflow = 'auto';
         };
+
+        // Dark Mode Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const mobileThemeToggleBtn = document.getElementById('mobile-theme-toggle');
+       
+        // Function to set theme
+        function setTheme(isDark) {
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            }
+        }
+
+        // Toggle handler
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            setTheme(!isDark);
+        }
+
+        // Event Listeners
+        if (themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+        if (mobileThemeToggleBtn) mobileThemeToggleBtn.addEventListener('click', toggleTheme);
+
+        // Initialization
+        const savedTheme = localStorage.theme;
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+       
+        if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+            setTheme(true);
+        } else {
+            setTheme(false);
+        }
     </script>
 </body>
 </html>
